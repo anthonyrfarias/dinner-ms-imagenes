@@ -4,8 +4,9 @@
   "description": "",
   "main": "./app.js",
   "scripts": {
-    "start": "nodemon --exec babel-node ./src/app.js",
-    "build": "babel src --out-dir build"
+    "start": "nodemon --exec babel-node ./src/app.js",      
+    "build": "babel src --out-dir build --source-maps",
+    "prod": "node --enable-source-maps ./build/app.js"
   },
   "keywords": [],
   "author": "",

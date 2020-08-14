@@ -1,6 +1,6 @@
 import express from "express";
 import ImageController from "../controllers/ImageController";
-import auth from "../middlewares/auth";
+import authMid from "../middlewares/auth";
 import multer from 'multer'
 
 
@@ -12,15 +12,16 @@ const upload = multer({
 });
 const route = express();
 
-route.post("/saveImage", auth.verifyToken, upload.single('image'), ImageController.saveImage);
-route.post("/saveImages", auth.verifyToken, upload.array('image', 10), ImageController.saveImages);
-route.get("/getPrivate/:id", auth.verifyToken, ImageController.getPrivate);
-route.get("/getImagesList", auth.verifyToken, ImageController.getImagesList);
+route.post("/saveImage", authMid.verifyToken, upload.single('image'), ImageController.saveImage);
+route.post("/saveImages",  authMid.verifyToken, upload.array('image', 10), ImageController.saveImages);
+route.get("/getPrivate/:id", authMid.verifyToken, ImageController.getPrivate);
+route.get("/getImagesList", authMid.verifyToken, ImageController.getImagesList);
 
 
 // Metodos publicos
 
 route.get("/getImage/:id", ImageController.getImage);
+route.get("/getImage/:id/b64", ImageController.getImageB64);
 
 
 export default route;

@@ -33,7 +33,36 @@ export default {
                 message: error
             });
         }
-
+    },    
+    
+    getImageB64: async (req, res) => {
+        try {
+            const request = req.params
+            if (!("id" in request) || request.id == "") {
+                return res.status(200).send({
+                    error: 1,
+                    tag: "ID_REQUIRED",
+                    message: "ID es requerido"
+                });
+            }
+            const response = await models.ImageModel.findOne({ filename: request.id, publica: true });
+            if (response) {
+                const filename = response.filename
+                fs.ReadStream(path.join(pathToImages, filename), { encoding: 'base64' }).pipe(res);
+            } else {
+                return res.status(403).send({
+                    error: 1,
+                    tag: "NOT_FOUND_OR_UNAUTHORIZED",
+                    message: "Está intentando acceder a una imagen que no es pública o que no existe"
+                });
+            }
+        } catch (error) {
+            return res.status(500).send({
+                error: 1,
+                tag: "ERROR",
+                message: error
+            });
+        }
     },
     getImagesList: async (req, res) => {
         try {
@@ -132,10 +161,8 @@ export default {
 
             const dataToken = await token.decode(req.headers.token); 
             
-            for (let index = 0; index < request.length; index++) {
-                
-                const element = request[index];
-                
+            for (let index = 0; index < request.length; index++) {                
+                const element = request[index];                
                 const imagen = {  
                     descripcion: "Descripción",                  
                     empresa: requestBody.idEmpresa ? requestBody.idEmpresa : null,
